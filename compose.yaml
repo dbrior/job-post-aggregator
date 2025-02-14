@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  selenium:
+    image: seleniarm/standalone-chromium
+    container_name: selenium
+    shm_size: "2g"
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+
+  scraper:
+    build:
+      context: ./scraper
+    container_name: scraper
+    depends_on:
+      # - db
+      - selenium
+    command: tail -f /dev/null
+    # command: ["/bin/bash", "-c", "./wait_for_selenium.sh python ./job_post_scanner.py"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@db:5432/${POSTGRES_DB}
+      SELENIUM_REMOTE_URL: http://selenium:4444
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: dashboard
+    depends_on:
+      - db
+    ports:
+      - "8501:8501"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@db:5432/${POSTGRES_DB}
+
+volumes:
+  postgres_data:

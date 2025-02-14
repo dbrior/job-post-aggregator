@@ -1,0 +1,29 @@
+name: 'Collect Posts'
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: 'Run Scraper'
+    runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASS: ${{ secrets.POSTGRES_PASS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: './compose.yaml'
+          services: |
+            selenium
+            scraper
+
+      - name: Collecting Posts
+        run: |
+          docker compose exec scraper ./wait_for_selenium.sh python ./job_post_scanner.py
