@@ -14,6 +14,7 @@ jobs:
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASS: ${{ secrets.POSTGRES_PASS }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
 
     steps:
       - name: Checkout repository
