@@ -25,12 +25,10 @@ services:
       context: ./scraper
     container_name: scraper
     depends_on:
-      # - db
       - selenium
     command: tail -f /dev/null
-    # command: ["/bin/bash", "-c", "./wait_for_selenium.sh python ./job_post_scanner.py"]
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
       SELENIUM_REMOTE_URL: http://selenium:4444
 
   dashboard:
@@ -42,7 +40,7 @@ services:
     ports:
       - "8501:8501"
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASS}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
 
 volumes:
   postgres_data:
