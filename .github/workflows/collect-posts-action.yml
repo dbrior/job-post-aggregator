@@ -1,8 +1,8 @@
 name: 'Collect Posts'
 
 on: 
-  schedule:
-    - cron: "0 3 * * *" # 3 AM daily
+  # schedule:
+  #   - cron: "0 3 * * *" # 3 AM daily
   workflow_dispatch:
 
 jobs:
