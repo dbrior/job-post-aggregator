@@ -1,0 +1,1 @@
+docker compose exec scraper ./wait_for_selenium.sh python ./job_post_scanner.py
